@@ -13,6 +13,5 @@ create table inventory (
 )
 
 -- populates inventory
-insert into inventory (item_id,product_name,department_name,price,stock_quantity){
-    value 
-}
+insert into inventory (item_id,product_name,department_name,price,stock_quantity)
+    values (1, "sample item", "sample department", 10.02, 1)

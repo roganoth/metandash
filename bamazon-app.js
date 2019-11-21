@@ -30,7 +30,9 @@ function userPrompt() {
             message: "How many would you like to buy?",
             name: "quantity"
         }
-    ])
+    ]).then(function(purchase){
+        
+    })
 }
 
 userPrompt();

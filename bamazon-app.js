@@ -48,20 +48,24 @@ function userPrompt() {
             var itemID = parseInt(purchase.ID);
             var amount = parseInt(purchase.quantity);
             var currentQuantity;
-            // connection.query("select quantity from inventory where item_id = "["'"+itemId+"'"], function (res) {
-            //     currentQuantity = parseInt(res);
-            //     console.log(currentQuantity)
-            // });
-            console.log(itemID);
-            console.log(amount);
+            // console.log(itemID);
+            // console.log(amount);
+            connection.query("select stock_quantity from inventory where item_id = " + mysql.escape(itemID), function (err, res) {
+                currentQuantity = parseInt(res[0].stock_quantity);
+                // console.log(currentQuantity)
+                // console.log(res[0].stock_quantity);
+            });
+            var newQuantity = currentQuantity - amount;
+            console.log(newQuantity);
             // console.log(currentQuantity);
-            // if (currentQuantity >= amount) {
-            //     connection.query("update inventory set quantity to ? where item_id is ?"[currentQuantity - amount, itemID]);
-            //     console.log("Purchase complete.");
+            // if (currentQuantity > amount) {
+            // connection.query("update inventory set quantity to ? where item_id is = " + mysql.escape(newQuantity), mysql.escape(itemID);
+            // console.log("Purchase complete.");
             // }
             // else {
-            //     console.log("We don't have that many of that item in stock.");
-            // }
+            if (amount > currentQuantity) {
+                console.log("We don't have that many of that item in stock.");
+            }
             connection.end();
         })
 };

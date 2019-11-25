@@ -49,27 +49,22 @@ function userPrompt() {
             var itemID = parseInt(purchase.ID);
             var amount = parseInt(purchase.quantity);
             var currentQuantity;
-            console.log(itemID);
-            console.log(amount);
             connection.query("select stock_quantity from inventory where item_id = " + mysql.escape(itemID), function (err, res) {
-                currentQuantity = parseInt(res[0].stock_quantity);
-                // console.log(currentQuantity)
-                // console.log(res[0].stock_quantity);
-            });
-            var newQuantity = currentQuantity - amount;
-            console.log(newQuantity);
-            console.log(currentQuantity);
-            if (currentQuantity > amount) {
-                connection.query("update inventory set quantity to ? where item_id is = " + mysql.escape(newQuantity), mysql.escape(itemID), function (err, response) {
-                    console.log("Purchase complete.");
-                });
-            }
-            else {
-                if (amount > currentQuantity) {
-                    console.log("We don't have that many of that item in stock.");
+                currentQuantity = res[0].stock_quantity;
+                if (currentQuantity >= amount) {
+                    console.log("yes")
+                    connection.query("update inventory set quantity to ? where item_id is = " + mysql.escape(currentQuantity) - mysql.escape(amount), mysql.escape(itemID), function (err, response) {
+                        console.log("Purchase complete.");
+                    });
                 }
-                connection.end();
-            })
-};
+                else {
+                    if (amount > currentQuantity) {
+                        console.log("We don't have that many of that item in stock.");
+                    }
+                };
+            });
+            connection.end();
+        });
+}
 
 userPrompt();

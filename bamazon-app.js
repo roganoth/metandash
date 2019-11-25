@@ -10,12 +10,13 @@ var inquirer = require("inquirer");
 
 function openConnection() {
     connection.connect(function (err, res) {
-        if (err) throw err;
+        if (err) {
+            console.log(err);
+        };
         console.log("You've connected to Bamazon!\n");
         inventoryCheck();
     });
 }
-
 
 function inventoryCheck() {
     connection.query("select item_id, product_name, price from inventory", function (err, res) {
@@ -48,8 +49,8 @@ function userPrompt() {
             var itemID = parseInt(purchase.ID);
             var amount = parseInt(purchase.quantity);
             var currentQuantity;
-            // console.log(itemID);
-            // console.log(amount);
+            console.log(itemID);
+            console.log(amount);
             connection.query("select stock_quantity from inventory where item_id = " + mysql.escape(itemID), function (err, res) {
                 currentQuantity = parseInt(res[0].stock_quantity);
                 // console.log(currentQuantity)
@@ -57,18 +58,18 @@ function userPrompt() {
             });
             var newQuantity = currentQuantity - amount;
             console.log(newQuantity);
-            // console.log(currentQuantity);
-            // if (currentQuantity > amount) {
-            // connection.query("update inventory set quantity to ? where item_id is = " + mysql.escape(newQuantity), mysql.escape(itemID);
-            // console.log("Purchase complete.");
-            // }
-            // else {
-            if (amount > currentQuantity) {
-                console.log("We don't have that many of that item in stock.");
+            console.log(currentQuantity);
+            if (currentQuantity > amount) {
+                connection.query("update inventory set quantity to ? where item_id is = " + mysql.escape(newQuantity), mysql.escape(itemID), function (err, response) {
+                    console.log("Purchase complete.");
+                });
             }
-            connection.end();
-        })
+            else {
+                if (amount > currentQuantity) {
+                    console.log("We don't have that many of that item in stock.");
+                }
+                connection.end();
+            })
 };
-
 
 userPrompt();
